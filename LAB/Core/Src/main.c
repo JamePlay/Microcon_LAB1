@@ -137,9 +137,14 @@ int main(void)
 			if(NumberInput == 64 && NumberDelay == 0){ //Correct Number
 				state = 3;
 			}
+			else if(NumberInput != 0 && NumberDelay == 0) state = 2;//Wrong
 			break;
 		case 2://wrong
 			NowState = 2;
+
+			if(NumberInput == 8 && NumberDelay == 0){ //clear
+				state = 1;
+			}
 			break;
 		case 3://6
 			NowState = 3;
@@ -147,6 +152,11 @@ int main(void)
 			if(NumberInput == 16 && NumberDelay == 0){ //Correct Number
 				state = 4;
 			}
+			else if(NumberInput == 8 && NumberDelay == 0){ //clear
+				state = 1;
+			}
+			else if(NumberInput != 0 && NumberDelay == 0) state = 2;//Wrong
+
 			break;
 		case 4://4
 			NowState = 4;
@@ -154,6 +164,11 @@ int main(void)
 			if(NumberInput == 1024 && NumberDelay == 0){ //Correct Number
 				state = 5;
 			}
+			else if(NumberInput == 8 && NumberDelay == 0){ //clear
+				state = 1;
+			}
+			else if(NumberInput != 0 && NumberDelay == 0) state = 2;//Wrong
+
 			break;
 		case 5://3
 			NowState = 5;
@@ -161,6 +176,11 @@ int main(void)
 			if(NumberInput == 16 && NumberDelay == 0){ //Correct Number
 				state = 6;
 			}
+			else if(NumberInput == 8 && NumberDelay == 0){ //clear
+				state = 1;
+			}
+			else if(NumberInput != 0 && NumberDelay == 0) state = 2;//Wrong
+
 			break;
 		case 6://4
 			NowState = 6;
@@ -168,6 +188,11 @@ int main(void)
 			if(NumberInput == 4096 && NumberDelay == 0){ //Correct Number
 				state = 7;
 			}
+			else if(NumberInput == 8 && NumberDelay == 0){ //clear
+				state = 1;
+			}
+			else if(NumberInput != 0 && NumberDelay == 0) state = 2;//Wrong
+
 			break;
 		case 7://0
 			NowState = 7;
@@ -175,6 +200,11 @@ int main(void)
 			if(NumberInput == 32 && NumberDelay == 0){ //Correct Number
 				state = 8;
 			}
+			else if(NumberInput == 8 && NumberDelay == 0){ //clear
+				state = 1;
+			}
+			else if(NumberInput != 0 && NumberDelay == 0) state = 2;//Wrong
+
 			break;
 		case 8://5
 			NowState = 8;
@@ -182,6 +212,11 @@ int main(void)
 			if(NumberInput == 4096 && NumberDelay == 0){ //Correct Number
 				state = 9;
 			}
+			else if(NumberInput == 8 && NumberDelay == 0){ //clear
+				state = 1;
+			}
+			else if(NumberInput != 0 && NumberDelay == 0) state = 2;//Wrong
+
 			break;
 		case 9://0
 			NowState = 9;
@@ -189,6 +224,11 @@ int main(void)
 			if(NumberInput == 4096 && NumberDelay == 0){ //Correct Number
 				state = 10;
 			}
+			else if(NumberInput == 8 && NumberDelay == 0){ //clear
+				state = 1;
+			}
+			else if(NumberInput != 0 && NumberDelay == 0) state = 2;//Wrong
+
 			break;
 		case 10://0
 			NowState = 10;
@@ -196,6 +236,11 @@ int main(void)
 			if(NumberInput == 4096 && NumberDelay == 0){ //Correct Number
 				state = 11;
 			}
+			else if(NumberInput == 8 && NumberDelay == 0){ //clear
+				state = 1;
+			}
+			else if(NumberInput != 0 && NumberDelay == 0) state = 2;//Wrong
+
 			break;
 		case 11://0
 			NowState = 11;
@@ -203,6 +248,11 @@ int main(void)
 			if(NumberInput == 16 && NumberDelay == 0){ //Correct Number
 				state = 12;
 			}
+			else if(NumberInput == 8 && NumberDelay == 0){ //clear
+				state = 1;
+			}
+			else if(NumberInput != 0 && NumberDelay == 0) state = 2;//Wrong
+
 			break;
 		case 12://4
 			NowState = 12;
@@ -210,6 +260,11 @@ int main(void)
 			if(NumberInput == 16 && NumberDelay == 0){ //Correct Number
 				state = 13;
 			}
+			else if(NumberInput == 8 && NumberDelay == 0){ //clear
+				state = 1;
+			}
+			else if(NumberInput != 0 && NumberDelay == 0) state = 2;//Wrong
+
 			break;
 		case 13://4
 			NowState = 13;
@@ -217,9 +272,19 @@ int main(void)
 			if(NumberInput == 32768 && NumberDelay == 0){ //Click OK
 				state = 14;
 			}
+			else if(NumberInput == 8 && NumberDelay == 0){ //clear
+				state = 1;
+			}
+			else if(NumberInput != 0 && NumberDelay == 0) state = 2;//Wrong
+
 			break;
 		case 14://LED on
 			NowState = 14;
+
+			if(NumberInput == 8 && NumberDelay == 0){ //clear
+				state = 1;
+			}
+			else if(NumberInput != 0 && NumberDelay == 0) state = 2; //Wrong
 
 			break;
 	}
