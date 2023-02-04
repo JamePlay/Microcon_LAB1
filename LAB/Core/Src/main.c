@@ -280,11 +280,12 @@ int main(void)
 			break;
 		case 14://LED on
 			NowState = 14;
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
 
 			if(NumberInput == 8 && NumberDelay == 0){ //clear
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 				state = 1;
 			}
-			else if(NumberInput != 0 && NumberDelay == 0) state = 2; //Wrong
 
 			break;
 	}
