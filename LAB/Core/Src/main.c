@@ -64,6 +64,11 @@ PortPin L[4] =
 };
 
 uint16_t ButtonMatrix = 0;
+uint16_t state = 1;
+uint16_t NumberInput = 0;
+uint16_t NumberDelay = 0;
+uint8_t NowState = 0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -71,7 +76,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
-void ReadMatrixButton_1Row();
+int ReadMatrixButton_1Row();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -123,8 +128,102 @@ int main(void)
 	  // 100 time per 1 second || 1 time per second = 1/100 = 0.01 s = 10 ms
 	  if(HAL_GetTick() > timestamp){
 		  timestamp = HAL_GetTick() + 10; // +10 ms
-		  ReadMatrixButton_1Row();
+		  NumberInput = ReadMatrixButton_1Row();
 	  }
+	  switch (state) {
+		case 1: //initial
+			NowState = 1;
+
+			if(NumberInput == 64 && NumberDelay == 0){ //Correct Number
+				state = 3;
+			}
+			break;
+		case 2://wrong
+			NowState = 2;
+			break;
+		case 3://6
+			NowState = 3;
+
+			if(NumberInput == 16 && NumberDelay == 0){ //Correct Number
+				state = 4;
+			}
+			break;
+		case 4://4
+			NowState = 4;
+
+			if(NumberInput == 1024 && NumberDelay == 0){ //Correct Number
+				state = 5;
+			}
+			break;
+		case 5://3
+			NowState = 5;
+
+			if(NumberInput == 16 && NumberDelay == 0){ //Correct Number
+				state = 6;
+			}
+			break;
+		case 6://4
+			NowState = 6;
+
+			if(NumberInput == 4096 && NumberDelay == 0){ //Correct Number
+				state = 7;
+			}
+			break;
+		case 7://0
+			NowState = 7;
+
+			if(NumberInput == 32 && NumberDelay == 0){ //Correct Number
+				state = 8;
+			}
+			break;
+		case 8://5
+			NowState = 8;
+
+			if(NumberInput == 4096 && NumberDelay == 0){ //Correct Number
+				state = 9;
+			}
+			break;
+		case 9://0
+			NowState = 9;
+
+			if(NumberInput == 4096 && NumberDelay == 0){ //Correct Number
+				state = 10;
+			}
+			break;
+		case 10://0
+			NowState = 10;
+
+			if(NumberInput == 4096 && NumberDelay == 0){ //Correct Number
+				state = 11;
+			}
+			break;
+		case 11://0
+			NowState = 11;
+
+			if(NumberInput == 16 && NumberDelay == 0){ //Correct Number
+				state = 12;
+			}
+			break;
+		case 12://4
+			NowState = 12;
+
+			if(NumberInput == 16 && NumberDelay == 0){ //Correct Number
+				state = 13;
+			}
+			break;
+		case 13://4
+			NowState = 13;
+
+			if(NumberInput == 32768 && NumberDelay == 0){ //Click OK
+				state = 14;
+			}
+			break;
+		case 14://LED on
+			NowState = 14;
+
+			break;
+	}
+	  NumberDelay = NumberInput;
   }
   /* USER CODE END 3 */
 }
@@ -235,28 +334,35 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LD2_Pin PA10 */
-  GPIO_InitStruct.Pin = LD2_Pin|GPIO_PIN_10;
+  /*Configure GPIO pin : LD2_Pin */
+  GPIO_InitStruct.Pin = LD2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PA7 PA9 */
   GPIO_InitStruct.Pin = GPIO_PIN_7|GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PC7 */
   GPIO_InitStruct.Pin = GPIO_PIN_7;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PA10 */
+  GPIO_InitStruct.Pin = GPIO_PIN_10;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PB3 PB4 PB5 */
   GPIO_InitStruct.Pin = GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
@@ -264,13 +370,13 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin : PB6 */
   GPIO_InitStruct.Pin = GPIO_PIN_6;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 }
 
 /* USER CODE BEGIN 4 */
-void ReadMatrixButton_1Row() {
+int ReadMatrixButton_1Row() {
     static uint8_t X = 0;
     register int i;
     //check row (first time anything will pass because all R[X] set as high. it can start row check at the second time by set R[1] as low )
@@ -284,7 +390,8 @@ void ReadMatrixButton_1Row() {
             //=0b***************0
             //if noting change (doesn't pass button) ButtonMatrix will always 0b0000000000000000 by this step
             //it do right to left repeat
-        } else {
+        }
+        else {
             ButtonMatrix |= 1 << (X * 4 + i);
             //i = 0 x = 0
             //(1 << (0*4 + 0))
@@ -300,6 +407,7 @@ void ReadMatrixButton_1Row() {
     HAL_GPIO_WritePin(R[(X + 1) % 4].PORT, R[(X + 1) % 4].PIN, 0); //Let R[X] to 0 by column (x start at 0 if it check all L[i] then do next column)
     X++; // because 1 set of i plus 1 to x
     X %= 4; // if X = 4 then x = 0
+    return ButtonMatrix;
     /*---------------------------------STEP of Work---------------------------------------
      1. check row of column x (form i = 0 to i = 3)
      2. reset column x (R[x]) to high
